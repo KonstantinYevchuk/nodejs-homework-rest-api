@@ -7,21 +7,21 @@ const { schemas } = require('../../models/contact');
 
 const { isValidId } = require("../../middleWares");
 
-const { validateBody, validateBodyUpdate } = require('../../decorators');
+const { validateBody, validateBodyUpdate, authenticate } = require('../../decorators');
 
 
 
-router.get('/', contactsControllers.getAllContacts);
+router.get('/', authenticate, contactsControllers.getAllContacts);
 
-router.get('/:id', isValidId, contactsControllers.getContactById);
+router.get('/:id', authenticate, isValidId, contactsControllers.getContactById);
 
-router.post('/', validateBody(schemas.contactJoiSchema), contactsControllers.addContact);
+router.post('/', authenticate, validateBody(schemas.contactJoiSchema), contactsControllers.addContact);
 
-router.put('/:id', isValidId, validateBodyUpdate, validateBody(schemas.contactJoiSchema), contactsControllers.updateContact);
+router.put('/:id', authenticate, isValidId, validateBodyUpdate, validateBody(schemas.contactJoiSchema), contactsControllers.updateContact);
 
-router.patch('/:id/favorite', isValidId, validateBody(schemas.updateFavoriteSchema), contactsControllers.updateFavorite);
+router.patch('/:id/favorite', authenticate, isValidId, validateBody(schemas.updateFavoriteSchema), contactsControllers.updateFavorite);
 
-router.delete('/:id', isValidId, contactsControllers.deleteContact);
+router.delete('/:id', authenticate, isValidId, contactsControllers.deleteContact);
 
 
 module.exports = router;

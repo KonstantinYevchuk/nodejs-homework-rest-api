@@ -30,6 +30,14 @@ const userSchema = new Schema ({
             type: String,
             required: true,
         },
+        verify: {
+          type: Boolean,
+          default: false,
+        },
+        verificationToken: {
+          type: String,
+          required: [true, 'Verify token is required'],
+        },
       }, {versionKey: false, timestamps: true});
 
 
@@ -41,6 +49,10 @@ const userSchema = new Schema ({
         subscription: Joi.string().validate("starter", "pro", "business"),
       });
 
+      const emailJoiSchema = Joi.object({
+        email: Joi.string().pattern(emailRegexp).messages({"any.required": `missing required email field`}),
+      });
+
       const loginJoiSchema = Joi.object({
         email: Joi.string().pattern(emailRegexp).messages({"any.required": `missing required email field`}),
         password: Joi.string().min(6).required().messages({"any.required": `missing required phone field`}),
@@ -49,6 +61,7 @@ const userSchema = new Schema ({
       const schemas = {
         registerJoiSchema,
         loginJoiSchema,
+        emailJoiSchema,
       };
 
       const User = model("user", userSchema);
